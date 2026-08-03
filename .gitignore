@@ -1,0 +1,9 @@
+venv/
+*.pcap
+data/
+datasets/
+__pycache__/
+.env
+n8n_data/
+UNSW-NB15/
+datasets/
