@@ -1,0 +1,22 @@
+[
+  {
+    "model": "Isolation_Forest",
+    "threshold": -0.580969520246779,
+    "fpr_cible_pct": 10,
+    "recall": 0.4529629908579995,
+    "precision": 0.9154839224100437,
+    "f1": 0.6060598062762279,
+    "fpr_reel": 0.10258677576877392,
+    "volume_reduction_factor_provisional": 2.0211009307315377
+  },
+  {
+    "model": "Autoencoder",
+    "threshold": 0.26249000430107117,
+    "fpr_cible_pct": 10,
+    "recall": 0.8355013754245525,
+    "precision": 0.9535420597854339,
+    "f1": 0.8906275686731787,
+    "fpr_reel": 0.09986362236593199,
+    "volume_reduction_factor_provisional": 1.14128125677938
+  }
+]
