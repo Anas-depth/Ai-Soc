@@ -1,0 +1,36 @@
+{
+  "model_retenu": "Ensemble_IF_OR_AE",
+  "threshold_if": -0.6262027747726266,
+  "threshold_ae": 0.19222763180732727,
+  "fpr_cible_if_pct": 2.0,
+  "fpr_cible_ae_pct": 14.5,
+  "val_fpr_combine": 0.14848444855043774,
+  "recall": 0.8464868393210029,
+  "precision": 0.9308452423443481,
+  "f1": 0.8866640682598345,
+  "fpr_reel": 0.15427829835906912,
+  "conforme_cahier_des_charges": false,
+  "recall_par_attaque": {
+    "DoS Hulk": 92.79,
+    "PortScan": 99.93,
+    "DDoS": 62.96,
+    "DoS GoldenEye": 28.69,
+    "FTP-Patator": 49.91,
+    "SSH-Patator": 13.4,
+    "DoS slowloris": 60.54,
+    "DoS Slowhttptest": 69.69,
+    "Bot": 62.87,
+    "Web Attack \u00ef\u00bf\u00bd Brute Force": 84.94,
+    "Web Attack \u00ef\u00bf\u00bd XSS": 96.01,
+    "Infiltration": 27.78,
+    "Web Attack \u00ef\u00bf\u00bd Sql Injection": 19.05,
+    "Heartbleed": 90.91
+  },
+  "bootstrap": {
+    "recall_mean": 0.8464663543808558,
+    "recall_std": 0.0005403960464591096,
+    "fpr_mean": 0.15450122982063724,
+    "fpr_std": 0.0009449393250862779
+  },
+  "volume_reduction_factor_provisional": 1.0996570756977297
+}
