@@ -1,0 +1,61 @@
+{
+  "version": "v2_chemin_B_15_features",
+  "model_retenu": "Autoencoder",
+  "features": [
+    "Destination Port",
+    "Flow Duration",
+    "Total Fwd Packets",
+    "Total Length of Fwd Packets",
+    "Flow IAT Mean",
+    "SYN Flag Count",
+    "RST Flag Count",
+    "ACK Flag Count",
+    "FIN Flag Count",
+    "PSH Flag Count",
+    "Flow Bytes/s",
+    "Flow Packets/s",
+    "Init_Win_bytes_forward",
+    "Init_Win_bytes_backward",
+    "Packet Length Std"
+  ],
+  "feature_ajoutee": "Packet Length Std",
+  "seuil_mse": 0.2514905035495758,
+  "fpr_cible_pct": 14.0,
+  "recall": 0.8512443378057047,
+  "precision": 0.935942127283697,
+  "f1": 0.8915862467929093,
+  "fpr_reel": 0.1429281597817958,
+  "recall_target_cdc": 0.85,
+  "conforme_recall": true,
+  "fpr_target_cdc_max": 0.15,
+  "conforme_fpr": true,
+  "conforme_global": true,
+  "recall_par_attaque": {
+    "DoS Hulk": 92.3,
+    "PortScan": 99.14,
+    "DDoS": 65.18,
+    "DoS GoldenEye": 28.69,
+    "FTP-Patator": 49.95,
+    "SSH-Patator": 49.8,
+    "DoS slowloris": 61.58,
+    "DoS Slowhttptest": 74.43,
+    "Bot": 42.68,
+    "Web Attack \u00ef\u00bf\u00bd Brute Force": 89.98,
+    "Web Attack \u00ef\u00bf\u00bd XSS": 96.32,
+    "Infiltration": 77.78,
+    "Web Attack \u00ef\u00bf\u00bd Sql Injection": 42.86,
+    "Heartbleed": 90.91
+  },
+  "bootstrap": {
+    "recall_mean": 0.8511853882272747,
+    "recall_std": 0.0005305580619262835,
+    "fpr_mean": 0.1429477807831443,
+    "fpr_std": 0.0009407423527099582
+  },
+  "volume_reduction_factor_provisional": 1.0994987992476073,
+  "comparaison_v1_14_features": {
+    "recall": 0.8456,
+    "fpr": 0.1448,
+    "conforme_global": false
+  }
+}
