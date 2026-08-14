@@ -1,0 +1,7 @@
+
+# Backups locaux (jamais versionnés)
+backup_jour*/
+**/backup_jour*/
+
+# Données et artefacts volumineux
+data/*.parquet
