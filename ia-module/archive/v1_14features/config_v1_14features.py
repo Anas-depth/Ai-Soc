@@ -5,8 +5,7 @@ FEATURES = [
     'SYN Flag Count', 'RST Flag Count', 'ACK Flag Count',
     'FIN Flag Count', 'PSH Flag Count',
     'Flow Bytes/s', 'Flow Packets/s',
-    'Init_Win_bytes_forward', 'Init_Win_bytes_backward',
-    'Packet Length Std',
+    'Init_Win_bytes_forward', 'Init_Win_bytes_backward'
 ]
 
 TARGET = 'Label'
