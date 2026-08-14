@@ -67,12 +67,20 @@ def get_skewed_features(train_df, cols, threshold=1.0):
     return skews[skews.abs() > threshold].index.tolist(), skews
 
 
-def apply_log1p(df, skewed_cols):
+def compute_log1p_shifts(train_df, skewed_cols):
+    """Shift calculé EXCLUSIVEMENT sur le train benign, à persister et réutiliser
+    identiquement sur val/test/inférence — jamais recalculé par batch."""
+    shifts = {}
+    for col in skewed_cols:
+        min_val = train_df[col].min()
+        shifts[col] = abs(min_val) + 1 if min_val < 0 else 0
+    return shifts
+
+
+def apply_log1p(df, skewed_cols, shifts):
     df = df.copy()
     for col in skewed_cols:
-        min_val = df[col].min()
-        shift = abs(min_val) + 1 if min_val < 0 else 0
-        df[col] = np.log1p(df[col] + shift)
+        df[col] = np.log1p(df[col] + shifts[col])
     return df
 
 
@@ -111,9 +119,11 @@ def main():
 
     skewed_cols, skew_values = get_skewed_features(train_w, FEATURES)
     print(f"  Features skewed (|skew| > 1.0): {skewed_cols}")
-    train_log = apply_log1p(train_w, skewed_cols)
-    val_log = apply_log1p(val_w, skewed_cols)
-    test_log = apply_log1p(test_w, skewed_cols)
+    log_shifts = compute_log1p_shifts(train_w, skewed_cols)
+    print(f"  Shifts log1p (train uniquement): {log_shifts}")
+    train_log = apply_log1p(train_w, skewed_cols, log_shifts)
+    val_log = apply_log1p(val_w, skewed_cols, log_shifts)
+    test_log = apply_log1p(test_w, skewed_cols, log_shifts)
 
     print("[6/6] Standardisation (fit = train benign uniquement)...")
     scaler = StandardScaler()
@@ -125,6 +135,7 @@ def main():
     joblib.dump(scaler, MODELS_DIR / "scaler.pkl")
     joblib.dump(iqr_bounds, MODELS_DIR / "iqr_bounds.pkl")
     joblib.dump(skewed_cols, MODELS_DIR / "skewed_cols.pkl")
+    joblib.dump(log_shifts, MODELS_DIR / "log_shifts.pkl")
 
     train_log.to_parquet(DATA_DIR / "train_benign_scaled.parquet")
     val_log.to_parquet(DATA_DIR / "val_benign_scaled.parquet")
