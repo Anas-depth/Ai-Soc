@@ -1,0 +1,271 @@
+{
+  "name": "SOC-AI",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "soc-ia-alert",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -496,
+        80
+      ],
+      "id": "3a8c8617-f1ea-47b1-81be-5a523106cacc",
+      "name": "Webhook",
+      "webhookId": "5b754c58-f213-4db3-917e-657e5c1b288c"
+    },
+    {
+      "parameters": {
+        "url": "https://api.abuseipdb.com/api/v2/check",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "ipAddress",
+              "value": "={{ $('Webhook').item.json.body.src_ip }}"
+            },
+            {
+              "name": "maxAgeInDays",
+              "value": "90"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Key",
+              "value": "3f968d89e300ddf14cb5e5ba27e448e3426ce422dfe4c49ac2df83acf861b15635942353a78ae36b"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -256,
+        -48
+      ],
+      "id": "7eff3e04-7800-4908-a485-d0dfe3779d3f",
+      "name": "Check AbuseIPDB"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.virustotal.com/api/v3/ip_addresses/{{ $('Webhook').item.json.body.src_ip }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-apikey",
+              "value": "c87244ce7b4e97fd12ecff6a71f32b0b843d307cd16a9865d0ddb7a69367b2c5"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -256,
+        192
+      ],
+      "id": "b047eba2-228b-486e-a60b-2861f25173de",
+      "name": "Check VirusTotal"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        -16,
+        80
+      ],
+      "id": "88b11da0-6d75-4608-b98e-d22092ebe90f",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $('Webhook').item.json.body.severity }}",
+              "rightValue": "HIGH",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "c2",
+              "leftValue": "={{ $('Webhook').item.json.body.severity }}",
+              "rightValue": "MEDIUM",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        80
+      ],
+      "id": "9dcbce4a-506f-4dad-8589-b0bd7d2ff88d",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "=🚨 **ALERTE SOC-IA** 🚨\nIP Source : {{ $('Webhook').item.json.body.src_ip }}\nScore IA : {{ $('Webhook').item.json.body.anomaly_score }}\nSévérité : {{ $('Webhook').item.json.body.severity }}\nScore AbuseIPDB : {{ $json.data.abuseConfidenceScore }}%\nDétections VT : {{ $json.data.attributes.last_analysis_stats.malicious }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        496,
+        -16
+      ],
+      "id": "365d1ad1-a3c8-4df0-8f97-731a14f0334f",
+      "name": "Discord",
+      "webhookId": "760d37d4-5844-443b-bf98-661a3e951333",
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "ggygRBflB5ote9kq",
+          "name": "Discord Webhook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://172.17.0.1:9200/soc-ia-alerts/_doc",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"src_ip\": \"{{ $('Webhook').item.json.body.src_ip }}\",\n  \"anomaly_score\": {{ $('Webhook').item.json.body.anomaly_score }},\n  \"severity\": \"{{ $('Webhook').item.json.body.severity }}\",\n  \"timestamp\": \"{{ $('Webhook').item.json.body.timestamp }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        224,
+        224
+      ],
+      "id": "80c62a66-1632-49c8-81ee-d3b2c48405c5",
+      "name": "Index OpenSearch",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2KSlAGUmNwOcHgrX",
+          "name": "Unnamed credential 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Check AbuseIPDB",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check VirusTotal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check AbuseIPDB": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check VirusTotal": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Index OpenSearch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Discord",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "39e45cc3-b78b-4ac1-8d62-45024305cacf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f4cfe41beab9f3b710d1a237d14d8423c5d31b6c1a81e0743b1ca0669071d7b3"
+  },
+  "nodeGroups": [],
+  "id": "M3Pb1vmqBarHcIA5",
+  "tags": []
+}

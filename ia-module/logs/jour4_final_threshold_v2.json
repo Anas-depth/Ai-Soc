@@ -40,10 +40,10 @@
     "DoS slowloris": 61.58,
     "DoS Slowhttptest": 74.43,
     "Bot": 43.79,
-    "Web Attack \u00ef\u00bf\u00bd Brute Force": 89.98,
-    "Web Attack \u00ef\u00bf\u00bd XSS": 96.32,
+    "Web Attack  -  Brute Force": 89.98,
+    "Web Attack  -  XSS": 96.32,
     "Infiltration": 77.78,
-    "Web Attack \u00ef\u00bf\u00bd Sql Injection": 42.86,
+    "Web Attack  -  Sql Injection": 42.86,
     "Heartbleed": 90.91
   },
   "bootstrap": {
@@ -52,10 +52,5 @@
     "fpr_mean": 0.13951591602874217,
     "fpr_std": 0.0009164146063612151
   },
-  "volume_reduction_factor_provisional": 1.1026337643848618,
-  "comparaison_v1_14_features": {
-    "recall": 0.8456,
-    "fpr": 0.1448,
-    "conforme_global": false
-  }
+  "volume_reduction_factor_provisional": 1.1026337643848618
 }
