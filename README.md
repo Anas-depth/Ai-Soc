@@ -19,6 +19,8 @@ flowchart LR
   D --> I[Grafana KPI dashboard]
 ```
 
+> **Note on the connector.** The committed `connector_live.py` replays pre-extracted CICIDS2017 flows to the scoring API — a reproducible way to exercise the full pipeline offline. Live `cicflowmeter` packet capture is the production path, integrated during Sprint 4 (see the report).
+
 ## Tech stack
 
 | Layer | Tool |
