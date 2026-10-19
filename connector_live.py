@@ -20,29 +20,29 @@ row = df.iloc[0]
 raw_cols = list(col_mapping.keys())
 payload_features = [float(row[c]) for c in raw_cols]
 
-print("1. Envoi à l'API SOC-IA...")
+print("1. Sending flow to the SOC-AI scoring API...")
 ia_url = "http://127.0.0.1:8000/score"
 ia_response = requests.post(ia_url, json={"features": payload_features}).json()
 
-print(f"Score obtenu : {ia_response['anomaly_score']} ({ia_response['severity']})")
+print(f"Anomaly score: {ia_response['anomaly_score']} ({ia_response['severity']})")
 
 if ia_response.get('is_anomaly'):
-    print("\n2. Anomalie détectée ! Déclenchement du pipeline SOAR (n8n)...")
+    print("\n2. Anomaly detected! Triggering the SOAR pipeline (n8n)...")
     n8n_url = "http://localhost:5678/webhook/soc-ia-alert"
-    
-    # Génération du timestamp exact pour OpenSearch
+
+    # Forge an exact ISO 8601 timestamp for OpenSearch
     current_timestamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
-    
+
     alert_payload = {
-        "src_ip": str(row.get('src_ip', '127.0.0.1')), 
+        "src_ip": str(row.get('src_ip', '127.0.0.1')),
         "anomaly_score": ia_response['anomaly_score'],
         "severity": ia_response['severity'],
         "features": payload_features,
         "timestamp": current_timestamp
     }
-    
+
     try:
         n8n_response = requests.post(n8n_url, json=alert_payload)
-        print("Alerte envoyée avec succès à n8n !")
+        print("Alert successfully sent to n8n!")
     except Exception as e:
-        print(f"Erreur de connexion à n8n : {e}")
+        print(f"n8n connection error: {e}")
