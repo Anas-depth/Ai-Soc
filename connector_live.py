@@ -31,7 +31,7 @@ if ia_response.get('is_anomaly'):
     n8n_url = "http://localhost:5678/webhook/soc-ia-alert"
     
     # Génération du timestamp exact pour OpenSearch
-    current_timestamp = datetime.datetime.utcnow().isoformat() + "Z"
+    current_timestamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
     
     alert_payload = {
         "src_ip": str(row.get('src_ip', '127.0.0.1')), 

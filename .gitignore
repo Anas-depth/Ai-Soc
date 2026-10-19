@@ -7,3 +7,10 @@ __pycache__/
 n8n_data/
 UNSW-NB15/
 datasets/
+
+# --- Runtime & secrets (ne jamais committer) ---
+soar/n8n-data/
+soar/SOC-AI.json
+*.bak
+wazuh-docker/build-docker-images/wazuh-manager/config/permanent_data.env
+.env
